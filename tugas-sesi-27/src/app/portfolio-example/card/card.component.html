@@ -1,0 +1,18 @@
+<div class="card">
+
+  <div class="card-header" (click)="toggle()">
+    <ng-content select="[card-header]"></ng-content>
+    <button class="toggle-btn">
+      {{ isExpanded ? '−' : '+' }}
+    </button>
+  </div>
+
+  <div class="card-body" #bodySection *ngIf="isExpanded">
+    <ng-content select="[card-body]"></ng-content>
+  </div>
+
+  <div class="card-footer">
+    <ng-content select="[card-footer]"></ng-content>
+  </div>
+
+</div>

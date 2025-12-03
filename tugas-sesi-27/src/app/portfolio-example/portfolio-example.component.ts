@@ -1,17 +1,18 @@
 import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { CardComponent } from './card/card.component';
 
 @Component({
   selector: 'app-portfolio-example',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, CardComponent],
   templateUrl: './portfolio-example.component.html',
   styleUrls: ['./portfolio-example.component.scss']
 })
 
 
-export class PortfolioExampleComponent implements OnInit { 
+export class PortfolioExampleComponent implements OnInit {
 
   @Input() titleInput: string = '';
   @Output() titleOutput = new EventEmitter<string>();
@@ -25,7 +26,7 @@ export class PortfolioExampleComponent implements OnInit {
   ];
 
   isDisabled: boolean = false;
-  searchTerm: string = ''; 
+  searchTerm: string = '';
   newStockSymbol: string = '';
 
   ngOnInit(): void {
@@ -60,7 +61,7 @@ export class PortfolioExampleComponent implements OnInit {
     this.isDisabled = false;
   }
 
-  sendOutput(): void {  
+  sendOutput(): void {
     this.titleOutput.emit('Portfolio Updated: ' + this.portfolioName);
     console.log('Output event triggered!');
   }
@@ -69,7 +70,7 @@ export class PortfolioExampleComponent implements OnInit {
     if (!this.searchTerm) {
       return this.stocks;
     }
-    return this.stocks.filter(stock => 
+    return this.stocks.filter(stock =>
       stock.symbol.toLowerCase().includes(this.searchTerm.toLowerCase())
     );
   }
