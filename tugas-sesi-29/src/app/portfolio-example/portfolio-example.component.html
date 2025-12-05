@@ -1,9 +1,13 @@
 <app-card>
 
   <!-- HEADER SLOT -->
-  <div card-header>
+  <div card-header appHighlight="#f7faff">
     {{ portfolioName }}
-    <span style="font-size: 14px; color: #6366f1;">
+    <span
+      style="font-size: 14px;"
+      [appCurrencyHighlight]="totalValue"
+      status="stable"
+    >
       — ${{ totalValue | number:'1.2-2' }}
     </span>
   </div>
@@ -40,6 +44,8 @@
         [disabled]="isDisabled"
         (click)="addStock(newStockSymbol)"
         class="btn btn-add"
+        appClickTracker
+        (clicksChange)="logClickCount('Add Stock', $event)"
       >
         Add Stock
       </button>
@@ -66,21 +72,38 @@
 
     <!-- Display Stocks -->
     <div class="stocks-list">
-      <h3>Stock Holdings</h3>
+      <h3 appHighlight>Stock Holdings</h3>
+
       <ul *ngIf="filteredStocks.length > 0; else noStocks">
-        <li *ngFor="let stock of filteredStocks; let i = index" class="stock-item">
+        <li
+          *ngFor="let stock of filteredStocks; let i = index"
+          class="stock-item"
+          [appHighlight]="'#e7f5ff'"
+          appClickTracker
+          (clicksChange)="logClickCount(stock.symbol, $event)"
+        >
           <div class="stock-info">
             <span class="stock-symbol">{{ stock.symbol }}</span>
             <span class="stock-details">
               {{ stock.shares }} shares &#64; ${{ stock.price | number:'1.2-2' }}
             </span>
-            <span class="stock-total">
+            <span class="stock-total"
+                  [appCurrencyHighlight]="stock.shares * stock.price"
+                  [status]="getStatus(stock)"
+            >
               Total: ${{ (stock.shares * stock.price) | number:'1.2-2' }}
             </span>
           </div>
-          <button (click)="removeStock(i)" class="btn btn-remove">Remove</button>
+
+          <button
+            (click)="removeStock(i)"
+            class="btn btn-remove"
+          >
+            Remove
+          </button>
         </li>
       </ul>
+
       <ng-template #noStocks>
         <p class="no-stocks">No stocks found matching "{{ searchTerm }}"</p>
       </ng-template>

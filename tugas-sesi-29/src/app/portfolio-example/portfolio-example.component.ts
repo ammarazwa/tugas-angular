@@ -2,11 +2,16 @@ import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CardComponent } from './card/card.component';
+import { HighlightElementsDirective } from '../lib/highlight-elements.directive';
+import { HighlightDirective } from '../lib/highlight.directive';
+import { CurrencyHighlightDirective } from '../lib/currency-highlight.directive';
+import { ClickTrackerDirective } from '../lib/click-tracker.directive';
 
 @Component({
   selector: 'app-portfolio-example',
   standalone: true,
-  imports: [FormsModule, CommonModule, CardComponent],
+  imports: [FormsModule, CommonModule, CardComponent, HighlightElementsDirective,
+    HighlightDirective, CurrencyHighlightDirective, ClickTrackerDirective],
   templateUrl: './portfolio-example.component.html',
   styleUrls: ['./portfolio-example.component.scss']
 })
@@ -74,4 +79,19 @@ export class PortfolioExampleComponent implements OnInit {
       stock.symbol.toLowerCase().includes(this.searchTerm.toLowerCase())
     );
   }
+
+  onStockClicked(symbol: string, count: number) {
+    console.log(`${symbol} clicked: ${count} times`);
+  }
+
+  logClickCount(label: string, count: number) {
+    console.log(`${label} clicked ${count} times`);
+  }
+
+  getStatus(stock: any): 'up' | 'down' | 'stable' {
+    if (stock.price > 200) return 'up';
+    if (stock.price < 100) return 'down';
+    return 'stable';
+  }
+
 }

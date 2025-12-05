@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { PortfolioExampleComponent } from './portfolio-example/portfolio-example.component';
 import { CommonModule } from '@angular/common';
+import { StockListComponent } from './stock-list/stock-list.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, PortfolioExampleComponent, CommonModule],
+  imports: [RouterOutlet, PortfolioExampleComponent, CommonModule, StockListComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
