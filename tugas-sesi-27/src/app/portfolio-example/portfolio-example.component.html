@@ -1,79 +1,66 @@
 <div class="portfolio-container">
   <h2>{{ portfolioName }}</h2>
-  <p class="total-value">Total Portfolio Value: ${{ totalValue | number:'1.2-2' }}</p>
+  <p>
+    Total Value:
+    {{ totalValue | currency : "USD" : "symbol" : "1.0-0" }}
+  </p>
 
-  <!-- Input from Parent -->
-  <div class="parent-input">
-    <strong>Title from Parent:</strong> {{ titleInput }}
-  </div>
+  <!-- Search -->
+  <input type="text" [(ngModel)]="searchTerm" placeholder="Search stock..." />
 
-  <!-- Search Bar -->
-  <div class="search-section">
-    <input 
-      [(ngModel)]="searchTerm" 
-      placeholder="Search stocks by symbol" 
-      class="search-input"
-    />
-    <p class="search-info" *ngIf="searchTerm">
-      Searching for: <strong>{{ searchTerm }}</strong>
-    </p>
-  </div>
+  <p>
+    Searching for:
+    {{ searchTerm | lowercase | truncate : 20 }}
+  </p>
 
-  <!-- Add Stock Section -->
-  <div class="add-stock-section">
-    <input 
-      [(ngModel)]="newStockSymbol" 
-      placeholder="Enter stock symbol (e.g., TSLA)" 
-      class="stock-input"
-      (keyup.enter)="addStock(newStockSymbol)"
-    />
-    <button 
-      [disabled]="isDisabled" 
-      (click)="addStock(newStockSymbol)"
-      class="btn btn-add"
-    >
-      Add Stock
-    </button>
-    <button 
-      (click)="addStock('TSLA')"
-      class="btn btn-tesla"
-    >
-      Add Tesla
-    </button>
-  </div>
+  <ul>
+    <li *ngFor="let stock of filteredStocks; let i = index">
+      <!-- 1) StockSymbolPipe + uppercase -->
+      <strong>
+        {{ stock.symbol | stockSymbol | uppercase }}
+      </strong>
 
-  <!-- Button Controls -->
-  <div class="button-controls">
-    <button (click)="disableButton()" class="btn btn-disable">
-      Disable Add Button
-    </button>
-    <button (click)="enableButton()" class="btn btn-enable">
-      Enable Add Button
-    </button>
-    <button (click)="sendOutput()" class="btn btn-output">
-      Send Output to Parent
-    </button>
-  </div>
+      — Shares: {{ stock.shares }}
 
-  <!-- Display Stocks -->
-  <div class="stocks-list">
-    <h3>Stock Holdings</h3>
-    <ul *ngIf="filteredStocks.length > 0; else noStocks">
-      <li *ngFor="let stock of filteredStocks; let i = index" class="stock-item">
-        <div class="stock-info">
-          <span class="stock-symbol">{{ stock.symbol }}</span>
-          <span class="stock-details">
-            {{ stock.shares }} shares &#64; ${{ stock.price | number:'1.2-2' }}
-          </span>
-          <span class="stock-total">
-            Total: ${{ (stock.shares * stock.price) | number:'1.2-2' }}
-          </span>
-        </div>
-        <button (click)="removeStock(i)" class="btn btn-remove">Remove</button>
-      </li>
-    </ul>
-    <ng-template #noStocks>
-      <p class="no-stocks">No stocks found matching "{{ searchTerm }}"</p>
-    </ng-template>
-  </div>
+      <!-- 2) PriceChangePipe -->
+      <span [innerHTML]="stock.price | priceChange"></span>
+
+      Current Price:
+      {{ stock.price | currency : "USD" : "symbol" : "1.2-2" }}
+
+      <br />
+
+      <!-- 3) TimeAgoPipe -->
+      <small>
+        Last updated:
+        {{ stock.updatedAt | timeAgo }}
+      </small>
+
+      <br />
+
+      <!-- 4) TruncatePipe -->
+      <span>
+        Notes:
+        {{ stock.description | truncate : 30 }}
+      </span>
+
+      <br />
+
+      <!-- 5) MarketStatusPipe -->
+      <span>
+        Market:
+        {{ stock.marketStatus | marketStatus }}
+      </span>
+
+      <button (click)="removeStock(i)">Remove</button>
+    </li>
+  </ul>
+
+  <input
+    type="text"
+    [(ngModel)]="newStockSymbol"
+    placeholder="Add new stock symbol"
+  />
+
+  <button (click)="addStock(newStockSymbol)">Add Stock</button>
 </div>
